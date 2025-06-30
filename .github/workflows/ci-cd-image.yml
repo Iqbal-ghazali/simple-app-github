@@ -25,14 +25,25 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
+
+      - name: Install Docker Compose
+        run: |
+          sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+          docker-compose version
+
       - name: Login to GitHub Registry
         run: echo ${{ secrets.TOKEN_GITHUB }} | docker login ghcr.io -u iqbal-ghazali --password-stdin
-      - name: stop and remove existing container
+
+      - name: Stop and remove existing container
         run: docker-compose down --rmi all
-      - name: start container
+
+      - name: Start container
         run: docker-compose up -d
-      - name: view container
+
+      - name: View container
         run: docker-compose ps
-      - name: check container
+
+      - name: Check container
         run: curl localhost:8080
 
